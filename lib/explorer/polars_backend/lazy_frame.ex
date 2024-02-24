@@ -294,6 +294,16 @@ defmodule Explorer.PolarsBackend.LazyFrame do
   end
 
   @impl true
+  def to_csv(%DF{data: df}, %Local.Entry{} = entry, header?, delimiter) do
+    <<delimiter::utf8>> = delimiter
+
+    case Native.lf_to_csv(df, entry.path, header?, delimiter, true) do
+      {:ok, _} -> :ok
+      {:error, error} -> {:error, RuntimeError.exception(error)}
+    end
+  end
+
+  @impl true
   def to_parquet(%DF{} = df, %Local.Entry{} = entry, {compression, level}, streaming) do
     case Native.lf_to_parquet(
            df.data,
@@ -519,7 +529,6 @@ defmodule Explorer.PolarsBackend.LazyFrame do
     put: 4,
     sample: 5,
     slice: 2,
-    to_csv: 4,
     to_ipc_stream: 3,
     to_ndjson: 2,
     to_rows: 2,
