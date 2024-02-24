@@ -248,7 +248,8 @@ pub fn lf_to_csv(
             serialize_options: serialize_options,
         };
 
-        lf.sink_csv(filename.into(), options)?;
+        lf.with_comm_subplan_elim(false)
+            .sink_csv(filename.into(), options)?;
         Ok(())
     } else {
         let df = lf.collect()?;
