@@ -244,7 +244,7 @@ pub fn lf_to_csv(
         let options = CsvWriterOptions {
             include_bom: false,
             include_header: include_headers,
-            batch_size: 10000,
+            batch_size: NonZeroUsize::new(1000).expect("Batch size must be non-zero"),
             maintain_order: true,
             serialize_options: serialize_options,
         };
